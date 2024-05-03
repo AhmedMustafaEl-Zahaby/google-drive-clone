@@ -1,10 +1,11 @@
-import React from 'react'
+import React, {useEffect , useState} from 'react'
 import styled from 'styled-components'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ListIcon from '@mui/icons-material/List';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+import {db} from "../../firebase";
 
 const DataContainer = styled.div`
     flex: 1 1;
@@ -51,6 +52,7 @@ const DataFile = styled.div`
     padding: 0px;
     padding-top: 10px;
     border-raduis: 5px;
+    cursor: pointer;
     svg{
         font-size: 60px;
         color: gray;
@@ -85,9 +87,26 @@ const DataListRow = styled.div`
     }
 `
 
-
-
 function Data() {
+  const [files, setFiles] = useState([])
+    useEffect(() => {
+        db.collection('myFiles').onSnapshot(snapshot => {
+            setFiles(snapshot.docs.map(doc => ({
+                id: doc.id,
+                item: doc.data()
+            })))
+        })
+    }, [])
+
+  const changeBytes = (bytes , decimals = 2) => {
+    if(bytes === 0) return '0 Bytes'
+    const k = 1024
+    const dm = decimals < 0 ? 0 : decimals
+    const sizes = ['Bytes' , 'KB' , 'MB' , 'GB' , 'TB' , 'PB' , 'EB' , 'ZB' , 'YB']
+    const i = Math.floor(Math.log(bytes) / Math.log(k))
+    return parseFloat((bytes / Math.pow(k , i)).toFixed(dm)) + ' ' + sizes[i]
+  }
+  console.log(files);
   return (
     <DataContainer>
         <DataHeader>
@@ -102,14 +121,14 @@ function Data() {
         </DataHeader>
         <div>
             <DataGrid>
-                <DataFile>
-                    <InsertDriveFileIcon />
-                    <p>File Name</p>
-                </DataFile>
-                <DataFile>
-                    <InsertDriveFileIcon />
-                    <p>File Name</p>
-                </DataFile>
+                {
+                    files.map(({id , item}) => (
+                        <DataFile key={id} onClick={() => window.open(`${item.fileUrl}`)}>
+                            <InsertDriveFileIcon />
+                            <p>{item.caption}</p>
+                        </DataFile>
+                    ))
+                }
             </DataGrid>
             <div>
                 <DataListRow>
@@ -118,12 +137,23 @@ function Data() {
                     <p><b>Last Modified</b></p>
                     <p><b>File Size</b></p>
                 </DataListRow>
-                <DataListRow>
-                    <p>Name <InsertDriveFileIcon /></p>
-                    <p>Ahmed</p>
-                    <p>Yesterday</p>
-                    <p>1 GB</p>
-                </DataListRow>
+                {
+                    files.map(({id , item}) => (
+                        <DataListRow key={item.id}>
+                            <a href={item.fileUrl} target='_blank'
+                            style={{
+                                color: 'black',
+                                minWidth: '200px',
+                            }}
+                            >
+                            <p><InsertDriveFileIcon /> {item.caption}</p>
+                            </a>
+                            <p>Owner</p>
+                            <p>{new Date(item.timestamp?.seconds * 1000).toUTCString()}</p>
+                            <p>{changeBytes(item.size)}</p>
+                        </DataListRow>
+                    ))
+                }
             </div>
         </div>
     </DataContainer>
