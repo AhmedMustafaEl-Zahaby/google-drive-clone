@@ -6,85 +6,24 @@ import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import SettingsIcon from "@mui/icons-material/Settings";
 import AppsIcon from "@mui/icons-material/Apps";
 import Avatar from "@mui/material/Avatar";
-import MenuIcon from '@mui/icons-material/Menu';
-import {DriveContext} from "../../Context/DriveContext";
-
-const Container = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 5px 20px;
-  background-color: white;
-  gap: 10px;
-  @media (max-width: 504px) {
-    padding: 5px 5px;
-    gap: 5px;
-    z-index: ${(props) => (props.isOpen ? "1000" : "0")};
-    position: ${(props) => (props.isOpen ? "sticky" : "relative")};
-  }
-`;
-
-const Logo = styled.div`
-  display: flex;
-  align-items: center;
-  img {
-    width: 40px;
-  }
-  @media (max-width: 768px) {
-    margin-bottom: 10px;
-  }
-  @media (max-width: 504px){
-    span {
-      display: none;
-    }
-  }
-`;
-
-const SearchContainer = styled.div`
-  display: flex;
-  align-items: center;
-  flex: 1;
-  max-width: 700px;
-  background-color: whitesmoke;
-  padding: 12px;
-  border-radius: 10px;
-  input {
-    flex: 1;
-    background-color: transparent;
-    border: none;
-    outline: none;
-  }
-`;
-
-const IconContainer = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  @media (max-width: 504px) {
-    display: none;
-  }
-`;
-const HiddenIcon = styled.div`
-  display: none;
-  @media (max-width: 504px) {
-    display: block;
-  }
-`;
-
-const Menu = styled.div`
-  display: none;
-  @media (max-width: 504px) {
-    display: block;
-  }
-`;
+import MenuIcon from "@mui/icons-material/Menu";
+import { DriveContext } from "../../Context/DriveContext";
+import {
+  Container,
+  Logo,
+  SearchContainer,
+  IconContainer,
+  HiddenIcon,
+  Menu,
+} from "./Components";
 
 function Header() {
-  const {open , toggleSidebar} = useContext(DriveContext);
+  const { open, toggleSidebar, user } = useContext(DriveContext);
   return (
-    <Container isOpen = {open}>
+    <Container isOpen={open}>
       <Menu>
-          <MenuIcon onClick = {toggleSidebar}/>
-      </Menu> 
+        <MenuIcon onClick={toggleSidebar} />
+      </Menu>
       <Logo>
         <img
           src="https://upload.wikimedia.org/wikipedia/commons/d/da/Google_Drive_logo.png"
@@ -101,7 +40,11 @@ function Header() {
         <HelpOutlineIcon />
         <SettingsIcon />
         <AppsIcon />
-        <Avatar />
+        <Avatar
+          src={user?.photoURL}
+          alt={user?.displayName}
+          sx={{ cursor: "pointer" }}
+        />
       </IconContainer>
       <HiddenIcon>
         <AppsIcon />
