@@ -1,10 +1,11 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 export const DataContainer = styled.div`
-  flex: 1 1;
+  flex: 1;
   padding: 10px 0px 0px 20px;
   position: relative;
-
+  z-index: -1;
+  width: 100%;
   @media (max-width: 504px) {
     padding: 5px;
   }
@@ -15,6 +16,7 @@ export const DataHeader = styled.div`
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid lightgray;
+  position: sticky;
   height: 40px;
   .headerleft {
     display: flex;
@@ -79,4 +81,30 @@ export const DataListRow = styled.div`
       margin: 10px;
     }
   }
+`;
+
+const rotate = keyframes`
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+`;
+
+export const Spinner = styled.div`
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-left-color: #09f;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: ${rotate} 1s linear infinite;
+`;
+
+export const SpinnerWrapper = styled.div`
+  display: ${(props) => (!props.loading ? "flex" : "none")};
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
 `;

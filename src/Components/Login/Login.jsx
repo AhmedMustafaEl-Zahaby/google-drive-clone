@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Container, Description } from "./Components";
 import LoginGoogle from "./LoginButton";
+import { ErrorDiv } from "../Sidebar/Components";
 function Login() {
   const [error, setError] = useState("");
   return (

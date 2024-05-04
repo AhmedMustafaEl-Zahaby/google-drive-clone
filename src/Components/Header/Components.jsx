@@ -51,15 +51,6 @@ export const IconContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
-  @media (max-width: 504px) {
-    display: none;
-  }
-`;
-export const HiddenIcon = styled.div`
-  display: none;
-  @media (max-width: 504px) {
-    display: block;
-  }
 `;
 
 export const Menu = styled.div`
@@ -67,4 +58,25 @@ export const Menu = styled.div`
   @media (max-width: 504px) {
     display: block;
   }
+`;
+
+export const Dropdown = styled.div`
+  display: flex;
+  align-items: center;
+  position: fixed;
+  padding: 5px;
+  top: 50px;
+  right: 10px;
+  z-index: 1000;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  svg {
+    margin-right: 8px;
+  }
+`;
+
+export const DropdownItem = styled.div`
+  cursor: pointer;
 `;

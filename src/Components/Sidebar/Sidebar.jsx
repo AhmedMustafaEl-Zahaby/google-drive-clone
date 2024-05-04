@@ -27,7 +27,7 @@ import {
 } from "./Components";
 
 function Sidebar() {
-  const { open, toggleSidebar, resetSidebar, totalStorage } =
+  const { open, toggleSidebar, resetSidebar, totalStorage, user } =
     useContext(DriveContext);
   const [openModal, setOpenModal] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -60,17 +60,21 @@ function Sidebar() {
     }
     e.preventDefault();
     setUploading(true);
+    if (!user) {
+      return;
+    }
+    const userId = user.uid;
     storage
-      .ref(`files/${file.name}`)
+      .ref(`users/${userId}/files/${file.name}`)
       .put(file)
       .then((snapshot) => {
         console.log(snapshot);
         storage
-          .ref("files")
+          .ref(`users/${userId}/files`)
           .child(file.name)
           .getDownloadURL()
           .then((url) => {
-            db.collection("myFiles").add({
+            db.collection("users").doc(userId).collection("myFiles").add({
               timestamp: firebase.firestore.FieldValue.serverTimestamp(),
               caption: file.name,
               fileUrl: url,
@@ -82,6 +86,11 @@ function Sidebar() {
             resetSidebar();
             setError(false);
           });
+      })
+      .catch((error) => {
+        console.error("Error uploading file:", error);
+        setError(true);
+        setUploading(false);
       });
   };
 

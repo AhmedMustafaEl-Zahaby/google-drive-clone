@@ -1,6 +1,5 @@
 .App {
-  display: grid;
-  grid-template-columns: 300px auto 50px;
+  display: flex;
 }
 
 @media (max-width: 504px) {
@@ -13,5 +12,4 @@
     grid-template-columns: 1fr 1fr;
     overflow: hidden;
   }
-  
 }
